@@ -162,7 +162,7 @@ def main():
                 crackedText = crack_caesar(sys.argv[2])
                 print(crackedText)
             elif sys.argv[1] == "--histogramm" or sys.argv[1] == "-h":
-                print("creating histogramm for text")
+                print("creating histogramm for text...")
                 # create histogramm for text
                 histogramm = string_histogramm(sys.argv[2])
                 print(histogramm)
