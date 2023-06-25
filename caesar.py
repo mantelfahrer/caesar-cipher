@@ -97,24 +97,24 @@ def crack_caesar(text: str):
 
     # initialise example text
     exampleText = '''I know that virtue to be in you, Brutus, As well as I do know your outward favour. Well, honour
-is the subject of my story. I cannot tell what you and other men Think of this life; but,
-for my single self, I had as lief not be as live to be In awe of such a thing as I myself. I was
-born free as Caesar; so were you: We both have fed as well, and we can both Endure the
-winter's cold as well as he: For once, upon a raw and gusty day, The troubled Tiber chafing
-with her shores, Caesar said to me 'Darest thou, Cassius, now Leap in with me into this angry
-flood, And swim to yonder point?' Upon the word, Accoutred as I was, I plunged in And
-bade him follow; so indeed he did. The torrent roar'd, and we did buffet it With lusty sinews,
-throwing it aside And stemming it with hearts of controversy; But ere we could arrive the
-point proposed, Caesar cried 'Help me, Cassius, or I sink!' I, as Aeneas, our great ancestor,
-Did from the flames of Troy upon his shoulder The old Anchises bear, so from the waves of
-Tiber Did I the tired Caesar. And this man Is now become a god, and Cassius is A wretched
-creature and must bend his body, If Caesar carelessly but nod on him. He had a fever when
-he was in Spain, And when the fit was on him, I did mark How he did shake: 'tis true, this
-god did shake; His coward lips did from their colour fly, And that same eye whose bend doth
-awe the world Did lose his lustre: I did hear him groan: Ay, and that tongue of his that bade
-the Romans Mark him and write his speeches in their books, Alas, it cried 'Give me some
-drink, Titinius,' As a sick girl. Ye gods, it doth amaze me A man of such a feeble temper
-should So get the start of the majestic world And bear the palm alone.'''
+    is the subject of my story. I cannot tell what you and other men Think of this life; but,
+    for my single self, I had as lief not be as live to be In awe of such a thing as I myself. I was
+    born free as Caesar; so were you: We both have fed as well, and we can both Endure the
+    winter's cold as well as he: For once, upon a raw and gusty day, The troubled Tiber chafing
+    with her shores, Caesar said to me 'Darest thou, Cassius, now Leap in with me into this angry
+    flood, And swim to yonder point?' Upon the word, Accoutred as I was, I plunged in And
+    bade him follow; so indeed he did. The torrent roar'd, and we did buffet it With lusty sinews,
+    throwing it aside And stemming it with hearts of controversy; But ere we could arrive the
+    point proposed, Caesar cried 'Help me, Cassius, or I sink!' I, as Aeneas, our great ancestor,
+    Did from the flames of Troy upon his shoulder The old Anchises bear, so from the waves of
+    Tiber Did I the tired Caesar. And this man Is now become a god, and Cassius is A wretched
+    creature and must bend his body, If Caesar carelessly but nod on him. He had a fever when
+    he was in Spain, And when the fit was on him, I did mark How he did shake: 'tis true, this
+    god did shake; His coward lips did from their colour fly, And that same eye whose bend doth
+    awe the world Did lose his lustre: I did hear him groan: Ay, and that tongue of his that bade
+    the Romans Mark him and write his speeches in their books, Alas, it cried 'Give me some
+    drink, Titinius,' As a sick girl. Ye gods, it doth amaze me A man of such a feeble temper
+    should So get the start of the majestic world And bear the palm alone.'''
 
     # calculate probability vectors for each alphabetic character using example text
     probabilityVectorsExampleText = frequencies(string_histogramm(exampleText))
@@ -124,8 +124,7 @@ should So get the start of the majestic world And bear the palm alone.'''
     listOfChiSquaredValues = []
     # for each of the 26 alphabetic characters try decoding with that letters number as key
     for i in range(1, 27):
-        probabilityVectors = frequencies(
-            string_histogramm(encode_text(text, i)))
+        probabilityVectors = frequencies(string_histogramm(encode_text(text, i)))
         chiSquaredValues = []
         # compare probability vectors for each of the 26 alphabetic characters
         for j in range(0, 26):
@@ -142,7 +141,7 @@ should So get the start of the majestic world And bear the palm alone.'''
         listOfChiSquaredValues.append(averageChiSquared)
     # get smallest value of all average chi squared values
     finalKey = listOfChiSquaredValues.index(min(listOfChiSquaredValues)) + 1
-    # encode text with
+    # encode text with final key
     crackedText = encode_text(text, finalKey)
     return crackedText
 
@@ -153,34 +152,38 @@ def main():
         argumentsLength = len(sys.argv)
         if argumentsLength < 3:
             raise RuntimeError("At least two arguments must be passed.")
-        # convert key to integer
-        try:
-            key = int(sys.argv[2])
-        except:
-            raise TypeError("The second argument must be a whole number.")
-
-        # encode text
-        encodedText = encode_text(sys.argv[1], key)
-
-        # print encoded text
-        print(encodedText)
-
-        # create histogramm for text
-        histogramm = string_histogramm(sys.argv[1])
-        # print(histogramm)
-
-        # determine frequency of characters in text
-        histogrammFrequencies = frequencies(histogramm)
-        # print(histogrammFrequencies)
-
-        # crack caesar
-        crackedText = crack_caesar(sys.argv[1])
-        print(crackedText)
-
-        # crack text specified in task
-        textToBeCracked = '''Reu jf zk zj. Wfi kyzj kzdv Z nzcc cvrmv pfl: Kf-dfiifn, zw pfl gcvrjv kf jgvrb nzky dv, 
-        Z nzcc tfdv yfdv kf pfl; fi, zw pfl nzcc, Tfdv yfdv kf dv, reu Z nzcc nrzk wfi pfl. '''
-        print("The answer for the last task, to crack the specified text is as follows: " + crack_caesar(textToBeCracked))
+        if argumentsLength > 3:
+            raise RuntimeError("Passed too many arguments. A maximum of two arguments is permitted.")
+        if argumentsLength == 3:
+            # check if option was used
+            if sys.argv[1] == "--crack" or sys.argv[1] == "-c":
+                print("cracking encrypted text...")
+                # crack caesar
+                crackedText = crack_caesar(sys.argv[2])
+                print(crackedText)
+            elif sys.argv[1] == "--histogramm" or sys.argv[1] == "-h":
+                print("creating histogramm for text")
+                # create histogramm for text
+                histogramm = string_histogramm(sys.argv[2])
+                print(histogramm)
+            elif sys.argv[1] == "--frequencies" or sys.argv[1] == "-f":
+                print("calculating frequencies...")
+                # create histogramm for text
+                histogramm = string_histogramm(sys.argv[2])
+                # determine frequency of characters in text
+                histogrammFrequencies = frequencies(histogramm)
+                print(histogrammFrequencies)
+            else:
+                print("encoding/decoding...")
+                # convert key to integer
+                try:
+                    key = int(sys.argv[2])
+                except:
+                    raise TypeError("The key argument must be a whole number.")
+                # encode text
+                encodedText = encode_text(sys.argv[1], key)
+                # print encoded text
+                print(encodedText)
 
     except RuntimeError as e:
         print("Error:", e)
